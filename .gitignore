@@ -1,0 +1,22 @@
+# Never commit the local sanitization map or anything holding real values
+*.local.md
+sanitize-map*
+
+# Secrets and key material
+.env
+*.env
+*.key
+*.psk
+*.pem
+secrets/
+
+# Notes and tooling that only serve the owner
+CLAUDE.md
+.claude/
+.obsidian/
+
+# Editor and OS clutter
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
