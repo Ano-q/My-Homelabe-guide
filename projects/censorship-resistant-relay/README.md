@@ -2,6 +2,8 @@
 
 A way back into the homelab from behind China's Great Firewall (GFW), which identifies and blocks ordinary VPN protocols. Clients connect to an hourly-billed cloud VPS in Tokyo with VLESS + REALITY, which looks like a normal TLS session to a real website. The VPS reaches home through a WireGuard tunnel that home dials **out**, so no inbound port is opened. The VPS is untrusted: it may reach exactly two LAN addresses, enforced twice.
 
+> **Sibling path:** for a network that blocks VPN protocols but does not intercept TLS, such as a school, the same REALITY technique runs from a container at home with no VPS. See [School network edge](school-network-edge.md).
+
 ## What it does
 
 - Gives a traveller every web service in the lab, by name, from networks that block WireGuard and Tailscale.

@@ -73,6 +73,7 @@ The network is currently flat. The segmented design is decided and being built i
 | CT 104 | monitoring | `10.10.20.205` | Prometheus, Grafana, Glance | [Monitoring](../projects/monitoring-alerting/) |
 | CT 107 | proxy | `10.10.20.208` | Caddy reverse proxy, wildcard TLS | [DNS, proxy, TLS](../projects/dns-proxy-tls/) |
 | CT 108 | relay | `10.10.20.209` | Outbound tunnel to the relay VPS | [Relay](../projects/censorship-resistant-relay/) |
+| CT 109 | edge-school | `10.10.20.202` | Xray REALITY on TCP 443 for the admin's devices on a school network | [School edge](../projects/censorship-resistant-relay/school-network-edge.md) |
 | VM 201 | omv-nas | `10.10.20.210` | NAS, both RAID arrays, Immich | [NAS](../projects/nas-storage/) |
 | VM 202 | docker-media | `10.10.20.211` | Jellyfin and media management, GPU | [Media stack](../projects/vpn-media-stack/) |
 | VM 203 | game-server | `10.10.20.212` | Pelican Panel and Wings | [Game server](../projects/game-server-isolation/) |
@@ -92,16 +93,18 @@ Every web service is reached by name, `<service>.example.com`. AdGuard answers t
 
 ## Remote access
 
-Three paths, deliberately independent so that breaking one never locks you out.
+Four paths, deliberately independent so that breaking one never locks you out.
 
 ```mermaid
 flowchart LR
     U1["Household device"] -- "WireGuard UDP 51820" --> FWD["Router: one port forward"] --> WG["CT 103 WireGuard<br/>tiered nftables"]
     U2["Admin device"] -- "Tailscale" --> TS["CT 100 subnet router"]
     U3["Device on a restrictive network"] -- "Xray REALITY TCP 443" --> VPS["Relay VPS"] -- "WireGuard, home dials out" --> RL["CT 108 relay"]
+    U4["Admin device on the school Wi-Fi"] -- "Xray REALITY TCP 443" --> FWD2["Router: second port forward"] --> ES["CT 109 edge-school"]
     WG --> LAN["Servers 10.10.20.0/24"]
     TS --> LAN
     RL -- "proxy :443 and DNS :53 only" --> LAN
+    ES -- "LAN and internet,<br/>other private ranges blocked" --> LAN
 ```
 
 | Path | Inbound port at home | Who uses it |
@@ -109,6 +112,7 @@ flowchart LR
 | WireGuard | One UDP forward | Household and family, by tier |
 | Tailscale | None | Admin fallback and out-of-band lifeline |
 | Relay | None, home dials out | Travel on networks that block VPN protocols |
+| School edge | One TCP 443 forward | The admin's own devices on a school network that blocks WireGuard but does not intercept TLS |
 
 ## Firewalling, in two layers
 

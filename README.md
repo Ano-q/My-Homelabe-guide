@@ -1,6 +1,6 @@
 # Homelab
 
-A single-node Proxmox homelab that runs storage, media, photos, monitoring, a game server and three independent remote-access paths for a household of about twenty users.
+A single-node Proxmox homelab that runs storage, media, photos, monitoring, a game server and four independent remote-access paths for a household of about twenty users.
 
 This repository documents what was built, why each design choice was made, and how to rebuild every piece yourself. Each project is self-contained and ends with a prompt you can paste into an AI assistant to rebuild it in your own environment.
 
@@ -12,7 +12,7 @@ This repository documents what was built, why each design choice was made, and h
 - **Edge network**: the ISP modem in bridge mode behind an Omada ER8411 router and an Omada 10G switch.
 - **Storage**: an OpenMediaVault VM that owns two software RAID arrays, and ZFS pools for backups.
 - **Services in VMs and LXC containers**: DNS filtering, a TLS reverse proxy, WireGuard, Tailscale, Prometheus and Grafana, Immich, Jellyfin, and a modded Minecraft server.
-- **Remote access** that does not depend on one vendor: WireGuard as the primary path, Tailscale as the fallback, and an outbound-only relay for networks that block VPNs.
+- **Remote access** that does not depend on one vendor: WireGuard as the primary path, Tailscale as the fallback, an outbound-only relay for networks that block VPNs, and a home-hosted REALITY edge for a school network.
 
 ## Projects
 
@@ -30,7 +30,7 @@ Each project is a build someone else can reproduce. Start with the architecture 
 | [Monitoring and alerting](projects/monitoring-alerting/) | Prometheus, Grafana, Glance, push alerts and an external dead-man switch |
 | [UPS graceful shutdown](projects/ups-nut-shutdown/) | NUT on a consumer UPS, self-healing USB link watchdog |
 | [VPN-routed media stack](projects/vpn-media-stack/) | Gluetun namespace killswitch, GPU transcoding, hardlink-safe layout |
-| [Censorship-resistant relay](projects/censorship-resistant-relay/) | Outbound-only WireGuard to a VPS running Xray REALITY, narrow blast radius |
+| [Censorship-resistant relay](projects/censorship-resistant-relay/) | Outbound-only WireGuard to a VPS running Xray REALITY, narrow blast radius. Includes the [school network edge](projects/censorship-resistant-relay/school-network-edge.md): REALITY on TCP 443 at home |
 | [Isolated game server](projects/game-server-isolation/) | Pelican Panel, container egress isolation, tunnel instead of port forward |
 
 ## Design principles
